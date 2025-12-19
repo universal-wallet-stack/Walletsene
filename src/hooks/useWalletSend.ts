@@ -19,10 +19,16 @@ export const useWalletSend = () => {
             : Number(caipNetwork.id))
         : base.id
 
-    const handleOpenSendWithArguments = async (assetSymbol: string = 'ETH', amount: string = '1') => {
+    const handleOpenSendWithArguments = async (assetSymbol?: string, amount: string = '1') => {
         try {
             if (!address) {
                 throw new Error('Wallet not connected')
+            }
+
+            if (!assetSymbol) {
+                console.log('No assetSymbol provided, opening Account view')
+                await open({ view: 'Account' })
+                return
             }
 
             const nativeSymbol = caipNetwork?.nativeCurrency?.symbol?.toLowerCase() || 'eth'
