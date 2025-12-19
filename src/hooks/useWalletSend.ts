@@ -19,7 +19,7 @@ export const useWalletSend = () => {
             : Number(caipNetwork.id))
         : base.id
 
-    const handleOpenSendWithArguments = async (assetSymbol: string = 'USDC', amount: string = '1') => {
+    const handleOpenSendWithArguments = async (assetSymbol: string = 'ETH', amount: string = '1') => {
         try {
             if (!address) {
                 throw new Error('Wallet not connected')
