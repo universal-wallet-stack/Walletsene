@@ -29,7 +29,7 @@ export const ConnectButton = () => {
   }, [isConnected, address, balanceData])
 
   return (
-    <Button variant="gold" size="lg" className="px-8" onClick={() => open()}>
+    <Button variant="gold" size="lg" className="px-8" onClick={() => open()} disabled={isConnected}>
       {isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : 'Login'}
     </Button>
   )
