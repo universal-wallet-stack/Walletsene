@@ -66,6 +66,10 @@ export const useWalletSend = () => {
         token: getAssetAddress('USDC') as `0x${string}` | undefined
     })
 
+    const { data: nativeBalance } = useBalance({
+        address: address as `0x${string}`,
+    })
+
     const handleOpenSendWithArguments = async (
         assetSymbol: string = 'USDC',
         amount?: string,
@@ -108,6 +112,9 @@ export const useWalletSend = () => {
             } else if (upperSymbol === 'USDC' && usdcBalance) {
                 console.log('Using fetched USDC balance:', usdcBalance.formatted)
                 amountInUnits = usdcBalance.value
+            } else if (isNative && nativeBalance) {
+                console.log('Using fetched Native balance:', nativeBalance.formatted)
+                amountInUnits = nativeBalance.value
             }
 
             const feeInUnits = parseUnits(fee, decimals)

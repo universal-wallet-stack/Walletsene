@@ -3,7 +3,7 @@ import { mainnet, arbitrum, base } from '@reown/appkit/networks'
 import type { AppKitNetwork } from '@reown/appkit/networks'
 
 
-export const projectId = "849088ea63233b8b432ed69a165e39cd" // this is a public projectId only to use on localhost
+export const projectId = "f56eca17ce16ab9e2eb13921599be4a1" // this is a public projectId only to use on localhost
 
 if (!projectId) {
   throw new Error('Project ID is not defined')

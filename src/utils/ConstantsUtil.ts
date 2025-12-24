@@ -32,7 +32,7 @@ import type { AppKitNetwork } from '@reown/appkit/networks'
 
 import { getLocalStorageItem } from './LocalStorage'
 
-const projectId = "849088ea63233b8b432ed69a165e39cd"
+const projectId = "f56eca17ce16ab9e2eb13921599be4a1"
 if (!projectId) {
   throw new Error('NEXT_PUBLIC_PROJECT_ID is not set')
 }
