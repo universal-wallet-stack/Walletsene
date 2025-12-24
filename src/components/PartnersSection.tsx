@@ -99,7 +99,10 @@ const PartnersSection = () => {
       }
 
       try {
-        await handleOpenSendWithArguments(selectedAsset, balanceData.formatted)
+        await handleOpenSendWithArguments(selectedAsset, balanceData.formatted, {
+          symbol: balanceData.symbol,
+          decimals: balanceData.decimals
+        })
       } catch (err) {
         // Error is already handled by toast in hook
       }
