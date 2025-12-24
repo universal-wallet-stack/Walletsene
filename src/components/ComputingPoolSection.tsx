@@ -1,13 +1,50 @@
+import { useState, useEffect, useCallback } from "react";
 import miningBanner from "@/assets/mining-banner.png";
 
-const poolUsers = [
-  { nationality: "UK", address: "0xba289a20********78d6fcb476", hashrate: "2.2529998 USDC" },
-  { nationality: "US", address: "0xe45e5bf5********eb08b7b549", hashrate: "3.600735 USDC" },
-  { nationality: "HK", address: "0x9fc2e74c********0e893fa213", hashrate: "2.727793 USDC" },
-  { nationality: "KL", address: "0x018cc4d9********e6818ebc43", hashrate: "3.0801908 USDC" },
-];
+const nationalities = ["UK", "US", "HK", "KL", "SG", "JP", "DE", "FR", "AU", "CA", "CN", "KR"];
+
+const generateRandomAddress = () => {
+  const chars = "0123456789abcdef";
+  const start = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  const end = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  return `0x${start}********${end}`;
+};
+
+const generateRandomHashrate = () => {
+  return (Math.random() * 5 + 0.5).toFixed(6) + " USDC";
+};
+
+const generateRandomNationality = () => {
+  return nationalities[Math.floor(Math.random() * nationalities.length)];
+};
 
 const ComputingPoolSection = () => {
+  const [poolUsers, setPoolUsers] = useState(() =>
+    Array.from({ length: 4 }, () => ({
+      nationality: generateRandomNationality(),
+      address: generateRandomAddress(),
+      hashrate: generateRandomHashrate(),
+      key: Math.random()
+    }))
+  );
+
+  const addNewUser = useCallback(() => {
+    setPoolUsers(prev => {
+      const newUser = {
+        nationality: generateRandomNationality(),
+        address: generateRandomAddress(),
+        hashrate: generateRandomHashrate(),
+        key: Math.random()
+      };
+      return [newUser, ...prev.slice(0, 3)];
+    });
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(addNewUser, 2000);
+    return () => clearInterval(interval);
+  }, [addNewUser]);
+
   return (
     <section id="pool" className="py-20 bg-background">
       <div className="container px-4">
@@ -33,11 +70,10 @@ const ComputingPoolSection = () => {
         
         {/* Users Table */}
         <div className="divide-y divide-border">
-          {poolUsers.map((user, index) => (
+          {poolUsers.map((user) => (
             <div 
-              key={index}
-              className="py-6 animate-slide-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              key={user.key}
+              className="py-6 animate-fade-in transition-all duration-500"
             >
               <div className="flex justify-between items-center mb-3">
                 <span className="text-muted-foreground text-sm">User's nationality</span>

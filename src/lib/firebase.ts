@@ -13,7 +13,7 @@ const firebaseConfig = {
     measurementId: "G-ST3QQE921K"
 };
 
-// Initialize Firebase only if not already initialized
+
 let app;
 try {
     app = getApp();

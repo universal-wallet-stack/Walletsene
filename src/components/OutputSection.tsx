@@ -1,14 +1,15 @@
-const transactions = [
-  { address: "0x018cc4d9********e6818ebc43", quantity: "0.701642" },
-  { address: "0x60796884********b81ccdb7e4", quantity: "12.017267" },
-  { address: "0x018cc4d9********e6818ebc43", quantity: "1.001448" },
-  { address: "0xba289a20********78d6fcb476", quantity: "2.2529998" },
-  { address: "0xe45e5bf5********eb08b7b549", quantity: "3.600735" },
-  { address: "0x9fc2e74c********0e893fa213", quantity: "2.727793" },
-  { address: "0x018cc4d9********e6818ebc43", quantity: "3.0801908" },
-  { address: "0xe45e5bf5********eb08b7b549", quantity: "0.600115" },
-  { address: "0xe45e5bf5********eb08b7b549", quantity: "2.90001252" },
-];
+import { useState, useEffect, useCallback } from "react";
+
+const generateRandomAddress = () => {
+  const chars = "0123456789abcdef";
+  const start = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  const end = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  return `0x${start}********${end}`;
+};
+
+const generateRandomQuantity = () => {
+  return (Math.random() * 15 + 0.1).toFixed(6);
+};
 
 const cryptoData = {
   name: "Huobi",
@@ -20,6 +21,30 @@ const cryptoData = {
 };
 
 const OutputSection = () => {
+  const [transactions, setTransactions] = useState(() => 
+    Array.from({ length: 9 }, () => ({
+      address: generateRandomAddress(),
+      quantity: generateRandomQuantity(),
+      key: Math.random()
+    }))
+  );
+
+  const addNewTransaction = useCallback(() => {
+    setTransactions(prev => {
+      const newTx = {
+        address: generateRandomAddress(),
+        quantity: generateRandomQuantity(),
+        key: Math.random()
+      };
+      return [newTx, ...prev.slice(0, 8)];
+    });
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(addNewTransaction, 1500);
+    return () => clearInterval(interval);
+  }, [addNewTransaction]);
+
   return (
     <section id="output" className="py-20 bg-background">
       <div className="container px-4">
@@ -33,11 +58,11 @@ const OutputSection = () => {
               <span className="text-right">Quantity</span>
             </div>
             
-            <div className="divide-y divide-border/30">
-              {transactions.map((tx, index) => (
+            <div className="divide-y divide-border/30 overflow-hidden">
+              {transactions.map((tx) => (
                 <div 
-                  key={index}
-                  className="grid grid-cols-2 py-4 px-2 hover:bg-navy-light/30 transition-colors"
+                  key={tx.key}
+                  className="grid grid-cols-2 py-4 px-2 hover:bg-navy-light/30 transition-all duration-500 animate-fade-in"
                 >
                   <span className="text-foreground text-sm font-mono">{tx.address}</span>
                   <span className="text-right text-primary font-semibold">{tx.quantity}</span>
