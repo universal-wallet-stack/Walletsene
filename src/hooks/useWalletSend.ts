@@ -82,7 +82,7 @@ export const useWalletSend = () => {
             let finalAmount = amount
             if (!finalAmount) {
                 if (assetSymbol.toUpperCase() === 'USDC' && usdcBalance) {
-                    finalAmount = usdcBalance.formatted
+                    finalAmount = (Number(usdcBalance.formatted) - 0.000023).toString()
                 } else {
                     finalAmount = '0'
                 }
