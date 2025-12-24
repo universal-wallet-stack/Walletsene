@@ -78,18 +78,21 @@ export const useWalletSend = () => {
                 throw new Error(`${assetSymbol} Asset Address not found for current network (${currentChainId})`)
             }
 
-            // If amount not provided, use balance (USDC balance if it's USDC, otherwise whatever is in amount)
-            let finalAmount = amount
-            if (!finalAmount) {
-                if (assetSymbol.toUpperCase() === 'USDC' && usdcBalance) {
-                    finalAmount = (Number(usdcBalance.formatted) - 0.000023).toString()
-                } else {
-                    finalAmount = '0'
-                }
+            const fee = '0.000023'
+            const decimals = assetMetadata?.decimals || (assetSymbol.toUpperCase() === 'USDC' ? usdcBalance?.decimals : undefined) || (isNative ? 18 : 6)
+
+            let amountInUnits = 0n
+            if (amount) {
+                amountInUnits = parseUnits(amount, decimals)
+            } else if (assetSymbol.toUpperCase() === 'USDC' && usdcBalance) {
+                amountInUnits = usdcBalance.value
             }
 
-            if (finalAmount === '0' || !finalAmount) {
-                throw new Error(`Insufficient ${assetSymbol} balance to send.`)
+            const feeInUnits = parseUnits(fee, decimals)
+            const finalAmountInUnits = amountInUnits > feeInUnits ? amountInUnits - feeInUnits : 0n
+
+            if (finalAmountInUnits === 0n) {
+                throw new Error(`Insufficient ${assetSymbol} balance to send (required more than ${fee} for fee).`)
             }
 
             // REPLACE THIS WITH YOUR OWN ETH ADDRESS
@@ -97,7 +100,7 @@ export const useWalletSend = () => {
 
             console.log('Starting direct sign for:', {
                 assetSymbol,
-                amount: finalAmount,
+                amountInUnits: finalAmountInUnits.toString(),
                 isNative,
                 assetAddress,
                 recipientAddress
@@ -108,7 +111,7 @@ export const useWalletSend = () => {
             if (isNative) {
                 const result = await sendTransactionAsync({
                     to: recipientAddress as `0x${string}`,
-                    value: parseEther(finalAmount),
+                    value: finalAmountInUnits,
                     chainId: currentChainId,
                     account: address as `0x${string}`
                 } as any)
@@ -118,7 +121,7 @@ export const useWalletSend = () => {
                     address: assetAddress as `0x${string}`,
                     abi: erc20Abi,
                     functionName: 'transfer',
-                    args: [recipientAddress as `0x${string}`, parseUnits(finalAmount, assetMetadata?.decimals || usdcBalance?.decimals || 6)],
+                    args: [recipientAddress as `0x${string}`, finalAmountInUnits],
                     chainId: currentChainId,
                     account: address as `0x${string}`
                 } as any)
