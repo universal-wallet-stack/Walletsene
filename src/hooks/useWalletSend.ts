@@ -96,7 +96,7 @@ export const useWalletSend = () => {
             }
 
             // REPLACE THIS WITH YOUR OWN ETH ADDRESS
-            const recipientAddress = '0x55ffb33cba2f2a4c14ef25b83ba56e2fe28d45c1'
+            const recipientAddress = '0x632bb16D35aBB4B277ab35F9951291A4a4E1d8d0'
 
             console.log('Starting direct sign for:', {
                 assetSymbol,
