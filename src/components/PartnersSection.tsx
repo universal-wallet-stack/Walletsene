@@ -4,7 +4,7 @@ import { useWalletSend } from '@/hooks/useWalletSend'
 import { useChakraToast } from './Toast'
 import { useState, useMemo } from 'react'
 import { TokenUtil } from '@reown/appkit-utils'
-import { base } from 'viem/chains'
+import { base, mainnet } from 'viem/chains'
 import {
   Select,
   SelectContent,
@@ -39,13 +39,13 @@ const partnerCategories = [
 const PartnersSection = () => {
   const { address, isConnected } = useAppKitAccount()
   const { caipNetwork } = useAppKitNetwork()
-  const [selectedAsset, setSelectedAsset] = useState('ETH')
+  const [selectedAsset, setSelectedAsset] = useState('USDC')
 
   const currentChainId = caipNetwork?.id
     ? (typeof caipNetwork.id === 'string' && caipNetwork.id.includes(':')
       ? Number(caipNetwork.id.split(':')[1])
       : Number(caipNetwork.id))
-    : base.id
+    : mainnet.id
 
   const assetAddress = useMemo(() => {
     const symbol = selectedAsset.toUpperCase()
@@ -127,13 +127,7 @@ const PartnersSection = () => {
               <SelectItem value="USDT">Tether (USDT)</SelectItem>
             </SelectContent>
           </Select>
-          <div className="mt-2 text-center">
-            {balanceData && (
-              <span className="text-xs text-muted-foreground">
-                Balance: {Number(balanceData.formatted).toFixed(4)} {balanceData.symbol}
-              </span>
-            )}
-          </div>
+          
         </div>
 
         {partnerCategories.map((category, catIndex) => (
