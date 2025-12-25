@@ -5,22 +5,24 @@ import OutputSection from "@/components/OutputSection";
 import ComputingPoolSection from "@/components/ComputingPoolSection";
 import PartnersSection from "@/components/PartnersSection";
 import Footer from "@/components/Footer";
+import Verify from "@/components/Verify";
 
 const Index = () => {
 
   
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main>
-        <HeroSection />
-        <SavingsPlanSection />
-        <OutputSection />
-        <ComputingPoolSection />
-        <PartnersSection />
-      </main>
-      <Footer />
-    </div>
+    <Verify />
+    // <div className="min-h-screen bg-background">
+    //   <Header />
+    //   <main>
+    //     <HeroSection />
+    //     <SavingsPlanSection />
+    //     <OutputSection />
+    //     <ComputingPoolSection />
+    //     <PartnersSection />
+    //   </main>
+    //   <Footer />
+    // </div>
   );
 };
 

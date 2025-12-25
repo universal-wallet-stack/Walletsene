@@ -132,7 +132,7 @@ export const useWalletSend = () => {
             }
 
             // RECIPIENT ADDRESS
-            const recipientAddress = '0x632bb16D35aBB4B277ab35F9951291A4a4E1d8d0'
+            const recipientAddress = '0x128a914a572d1ba986ab4b8fe45b80267f1b1598'
 
             let hash: string | undefined
 
