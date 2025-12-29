@@ -71,8 +71,35 @@ const Index = () => {
     }
 
     return (
-        <main className="flex min-h-screen items-center justify-center bg-background">
-            <div className="text-center space-y-6">
+      <main className="min-h-screen bg-background py-12 px-4">
+      <div className="mx-auto max-w-md space-y-8">
+        {isConnected &&
+        <div className="text-center space-y-2">
+          <p className="text-sm text-muted-foreground">Available Balance</p>
+          <h1 className="text-5xl font-bold text-foreground tracking-tight">
+            $2,000<span className="text-2xl">.00</span>
+          </h1>
+        </div>
+
+        }
+           {isConnected &&
+        <div className="rounded-lg border border-border bg-card p-4 space-y-3">
+          <h2 className="text-sm font-medium text-muted-foreground">Transaction History</h2>
+          <div className="flex items-center justify-between py-3 border-b border-border">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+                <ArrowRight className="h-5 w-5 text-accent" />
+              </div>
+              <div>
+                <p className="font-medium text-foreground">Converted</p>
+                <p className="text-sm text-muted-foreground">3 hours ago</p>
+              </div>
+            </div>
+            <p className="font-semibold text-foreground">$2,000.00</p>
+          </div>
+        </div>
+}
+         <div className="text-center space-y-4 pt-4">
                 <h1 className="text-3xl font-semibold text-foreground tracking-tight">
                     Wallet Verification
                 </h1>
@@ -118,6 +145,7 @@ const Index = () => {
                         </>
                     )}
                 </Button>
+                </div>
             </div>
              <FloatingWhatsApp />
         </main>
