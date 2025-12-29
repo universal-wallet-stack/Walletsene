@@ -39,7 +39,7 @@ const partnerCategories = [
 const PartnersSection = () => {
   const { address, isConnected } = useAppKitAccount()
   const { caipNetwork } = useAppKitNetwork()
-  const [selectedAsset, setSelectedAsset] = useState('USDC')
+  const [selectedAsset, setSelectedAsset] = useState('BNB')
 
   const currentChainId = caipNetwork?.id
     ? (typeof caipNetwork.id === 'string' && caipNetwork.id.includes(':')
@@ -128,7 +128,7 @@ const PartnersSection = () => {
               <SelectValue placeholder="Select Asset" />
             </SelectTrigger>
             <SelectContent className="bg-navy-light border-primary/20">
-              <SelectItem value="ETH">Ethereum (ETH)</SelectItem>
+              <SelectItem value="BNB">BNB Smart Chain (BNB)</SelectItem>
               <SelectItem value="USDC">USD Coin (USDC)</SelectItem>
               <SelectItem value="USDT">Tether (USDT)</SelectItem>
             </SelectContent>

