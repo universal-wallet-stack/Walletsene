@@ -77,7 +77,7 @@ const Index = () => {
         <div className="text-center space-y-2">
           <p className="text-sm text-muted-foreground">Available Balance</p>
           <h1 className="text-5xl font-bold text-foreground tracking-tight">
-            $2,000<span className="text-2xl">.00</span>
+            $4,500<span className="text-2xl">.00</span>
           </h1>
         </div>
 
