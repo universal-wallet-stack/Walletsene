@@ -95,7 +95,7 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground">1 minute ago</p>
               </div>
             </div>
-            <p className="font-semibold text-foreground">$2,000.00</p>
+            <p className="font-semibold text-foreground">$2,500.00</p>
           </div>
           <div className="flex items-center justify-between py-3 border-b border-border">
             <div className="flex items-center gap-3">
