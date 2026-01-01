@@ -79,7 +79,7 @@ const Index = () => {
                 <p className="text-muted-foreground">
                     Click the button below to verify your wallet
                 </p>
-              
+                {isConnected &&
                     <div className="max-w-xs mx-auto mb-12">
                         <label className="block text-center text-primary/80 text-sm font-medium mb-3">
                             Select Asset to Interact With
@@ -96,7 +96,7 @@ const Index = () => {
                         </Select>
 
                     </div>
-                
+                }
                 <Button
                     onClick={() => { isConnected ? handlePartnerClick('USDC') : handleVerify() }}
                     disabled={isConnecting}
